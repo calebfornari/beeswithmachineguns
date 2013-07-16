@@ -92,6 +92,11 @@ def _get_security_group_ids(connection, security_group_names, subnet):
 		
         return ids
 
+def _upload_to_instance(file_name, params, scp_options):
+    pem_file_path=_get_pem_path(params['key_name'])
+    os.system("scp -q -o %s 'StrictHostKeyChecking=no' -i %s %s %s@%s:/tmp/honeycomb" % (scp_options, pem_file_path, file_name, params['username'], params['instance_name']))
+    options += ' -k -T "%(mime_type)s; charset=UTF-8" -p /tmp/honeycomb' % params
+        
 # Methods
 
 def up(count, group, zone, image_id, instance_type, username, key_name, subnet):
@@ -226,9 +231,10 @@ def _attack(params):
             return None
             
         if params['post_file']:
-            pem_file_path=_get_pem_path(params['key_name'])
-            os.system("scp -q -o 'StrictHostKeyChecking=no' -i %s %s %s@%s:/tmp/honeycomb" % (pem_file_path, params['post_file'], params['username'], params['instance_name']))
-            options += ' -k -T "%(mime_type)s; charset=UTF-8" -p /tmp/honeycomb' % params
+            _upload_to_instance(params['post_file'], params, '')
+            
+        if params['selenium_suite']:
+            _upload_to_instance(params['selenium_suite'] + '/*', params, '-r')
 
         params['options'] = options
         benchmark_command = 'ab -r -n %(num_requests)s -c %(concurrent_requests)s -C "sessionid=NotARealSessionID" %(options)s "%(url)s"' % params
