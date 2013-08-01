@@ -90,7 +90,7 @@ commands:
     attack_group.add_option('-p', '--post-file',  metavar="POST_FILE",  nargs=1,
                         action='store', dest='post_file', type='string', default=False,
                         help="The POST file to deliver with the bee's payload.")
-    attack_group.add_option('-s', '--selenium-suite',  metavar="SELENIUM_SUITE",  nargs=1,
+    attack_group.add_option('-S', '--selenium-suite',  metavar="SELENIUM_SUITE",  nargs=1,
                         action='store', dest='selenium_suite', type='string', default=False,
                         help="This must be a directory which contains a selenium IDE Test Suite file. The corresponding Test Case files and a Selenium RC Server must reside in the same directory.")
     attack_group.add_option('-m', '--mime-type',  metavar="MIME_TYPE",  nargs=1,
